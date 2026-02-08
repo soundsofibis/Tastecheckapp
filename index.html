@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Analyze your music taste with AI. Upload your Spotify Wrapped or Apple Music Replay and get scored!">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TasteCheck">
+    
+    <title>TasteCheck - Analyze Your Music Taste</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 TasteCheck</h1>
+            <p class="tagline">How good is your music taste?</p>
+        </header>
+
+        <main>
+            <!-- Mode Selection -->
+            <section class="mode-selection" id="modeSelection">
+                <h2>Choose Your Analysis Mode</h2>
+                <div class="mode-grid">
+                    <button class="mode-btn" onclick="selectMode('single')">
+                        <span class="mode-emoji">🎯</span>
+                        <span class="mode-label">Analyze My Taste</span>
+                        <span class="mode-description">Upload one screenshot</span>
+                    </button>
+                    <button class="mode-btn" onclick="selectMode('evolution')">
+                        <span class="mode-emoji">📈</span>
+                        <span class="mode-label">Track My Evolution</span>
+                        <span class="mode-description">Compare 2-3 years</span>
+                    </button>
+                    <button class="mode-btn" onclick="selectMode('battle')">
+                        <span class="mode-emoji">⚔️</span>
+                        <span class="mode-label">Battle a Friend</span>
+                        <span class="mode-description">Head-to-head comparison</span>
+                    </button>
+                    <button class="mode-btn" onclick="selectMode('manual')">
+                        <span class="mode-emoji">✍️</span>
+                        <span class="mode-label">Answer Questions</span>
+                        <span class="mode-description">No screenshot needed</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Single Mode -->
+            <section class="mode-section" id="singleSection" style="display: none;">
+                <div class="mode-header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2>Analyze Your Taste</h2>
+                </div>
+                
+                <div class="name-input-section">
+                    <label for="singleName">Your Name (optional)</label>
+                    <input type="text" id="singleName" class="name-input" placeholder="e.g., Sarah" maxlength="20">
+                </div>
+                
+                <p class="instruction">Upload your Spotify Wrapped, Apple Music Replay, or any streaming recap</p>
+                
+                <div class="upload-area" id="uploadArea1" onclick="document.getElementById('fileInput1').click()">
+                    <input type="file" id="fileInput1" accept="image/*" hidden onchange="handleFileUpload(event, 'single')">
+                    <div class="upload-prompt" id="prompt1">
+                        <span class="upload-icon">📸</span>
+                        <p>Click or drag your screenshot here</p>
+                        <p class="file-types">PNG, JPG, or HEIC</p>
+                    </div>
+                    <img class="preview-image" id="preview1" style="display: none;">
+                </div>
+            </section>
+
+            <!-- Evolution Mode -->
+            <section class="mode-section" id="evolutionSection" style="display: none;">
+                <div class="mode-header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2>Track Your Evolution</h2>
+                </div>
+                
+                <div class="name-input-section">
+                    <label for="evolutionName">Your Name (optional)</label>
+                    <input type="text" id="evolutionName" class="name-input" placeholder="e.g., Sarah" maxlength="20">
+                </div>
+                
+                <p class="instruction">Upload 2-3 screenshots from different years</p>
+                
+                <div class="multi-upload-grid">
+                    <div class="upload-slot">
+                        <label class="slot-label">Year 1 (Oldest)</label>
+                        <div class="upload-area" onclick="document.getElementById('fileInput2a').click()">
+                            <input type="file" id="fileInput2a" accept="image/*" hidden onchange="handleFileUpload(event, 'evolution', 0)">
+                            <div class="upload-prompt" id="prompt2a">
+                                <span class="upload-icon">📸</span>
+                                <p>First year</p>
+                            </div>
+                            <img class="preview-image" id="preview2a" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="upload-slot">
+                        <label class="slot-label">Year 2</label>
+                        <div class="upload-area" onclick="document.getElementById('fileInput2b').click()">
+                            <input type="file" id="fileInput2b" accept="image/*" hidden onchange="handleFileUpload(event, 'evolution', 1)">
+                            <div class="upload-prompt" id="prompt2b">
+                                <span class="upload-icon">📸</span>
+                                <p>Second year</p>
+                            </div>
+                            <img class="preview-image" id="preview2b" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="upload-slot">
+                        <label class="slot-label">Year 3 (Optional)</label>
+                        <div class="upload-area optional" onclick="document.getElementById('fileInput2c').click()">
+                            <input type="file" id="fileInput2c" accept="image/*" hidden onchange="handleFileUpload(event, 'evolution', 2)">
+                            <div class="upload-prompt" id="prompt2c">
+                                <span class="upload-icon">📸</span>
+                                <p>Third year</p>
+                            </div>
+                            <img class="preview-image" id="preview2c" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Battle Mode -->
+            <section class="mode-section" id="battleSection" style="display: none;">
+                <div class="mode-header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2>Battle a Friend</h2>
+                </div>
+                <p class="instruction">Upload both screenshots and let AI decide who has better taste!</p>
+                
+                <div class="battle-grid">
+                    <div class="battle-side">
+                        <label class="battle-label">Person 1</label>
+                        <input type="text" id="nameA" class="name-input" placeholder="Enter name" maxlength="20">
+                        <div class="upload-area" onclick="document.getElementById('fileInput3a').click()">
+                            <input type="file" id="fileInput3a" accept="image/*" hidden onchange="handleFileUpload(event, 'battle', 0)">
+                            <div class="upload-prompt" id="prompt3a">
+                                <span class="upload-icon">📸</span>
+                                <p>Person 1's recap</p>
+                            </div>
+                            <img class="preview-image" id="preview3a" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="battle-side">
+                        <label class="battle-label">Person 2</label>
+                        <input type="text" id="nameB" class="name-input" placeholder="Enter name" maxlength="20">
+                        <div class="upload-area" onclick="document.getElementById('fileInput3b').click()">
+                            <input type="file" id="fileInput3b" accept="image/*" hidden onchange="handleFileUpload(event, 'battle', 1)">
+                            <div class="upload-prompt" id="prompt3b">
+                                <span class="upload-icon">📸</span>
+                                <p>Person 2's recap</p>
+                            </div>
+                            <img class="preview-image" id="preview3b" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manual Input Mode -->
+            <section class="mode-section" id="manualSection" style="display: none;">
+                <div class="mode-header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2>Answer Questions</h2>
+                </div>
+                
+                <div class="name-input-section">
+                    <label for="manualName">Your Name (optional)</label>
+                    <input type="text" id="manualName" class="name-input" placeholder="e.g., Sarah" maxlength="20">
+                </div>
+                
+                <p class="instruction">Tell us about your music taste</p>
+                
+                <div class="questions-form">
+                    <div class="question-group">
+                        <label>Favorite all-time artist</label>
+                        <input type="text" id="q1" placeholder="e.g., David Bowie">
+                    </div>
+                    <div class="question-group">
+                        <label>Favorite album of all time</label>
+                        <input type="text" id="q2" placeholder="e.g., Dark Side of the Moon">
+                    </div>
+                    <div class="question-group">
+                        <label>Current favorite song</label>
+                        <input type="text" id="q3" placeholder="e.g., Song name">
+                    </div>
+                    <div class="question-group">
+                        <label>Current favorite artist</label>
+                        <input type="text" id="q4" placeholder="e.g., Artist name">
+                    </div>
+                    <div class="question-group">
+                        <label>Guilty pleasure artist/song</label>
+                        <input type="text" id="q5" placeholder="e.g., That song you secretly love">
+                    </div>
+                    <div class="question-group">
+                        <label>Genres you listen to most</label>
+                        <input type="text" id="q6" placeholder="e.g., Rock, Jazz, Hip-Hop">
+                    </div>
+                </div>
+                
+                <button class="continue-btn" onclick="checkManualInputReady()">Continue</button>
+            </section>
+
+            <!-- Feedback Style Selection -->
+            <section class="feedback-section" id="feedbackSection" style="display: none;">
+                <h2>Choose Your Feedback Style</h2>
+                <div class="feedback-grid">
+                    <button class="feedback-btn" onclick="selectFeedback('roasting')">
+                        <span class="emoji">🔥</span>
+                        <span class="label">Roasting</span>
+                        <span class="description">Brutally honest</span>
+                    </button>
+                    <button class="feedback-btn" onclick="selectFeedback('encouraging')">
+                        <span class="emoji">✨</span>
+                        <span class="label">Encouraging</span>
+                        <span class="description">Positive vibes</span>
+                    </button>
+                    <button class="feedback-btn" onclick="selectFeedback('sarcastic')">
+                        <span class="emoji">😏</span>
+                        <span class="label">Sarcastic</span>
+                        <span class="description">Playfully cheeky</span>
+                    </button>
+                    <button class="feedback-btn" onclick="selectFeedback('analytical')">
+                        <span class="emoji">🤓</span>
+                        <span class="label">Analytical</span>
+                        <span class="description">Deep dive</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p id="loadingText">Analyzing your taste...</p>
+            </div>
+
+            <!-- Results -->
+            <section class="results-section" id="results" style="display: none;">
+                <h2 id="resultsTitle">Your TasteCheck Results</h2>
+                
+                <div id="resultsContent">
+                    <!-- Single/Evolution/Manual results -->
+                    <div class="score-card" id="singleScore" style="display: none;">
+                        <div class="score-number" id="scoreNumber">--</div>
+                        <div class="score-label">Taste Quality Score</div>
+                    </div>
+
+                    <!-- Battle results -->
+                    <div class="battle-results" id="battleResults" style="display: none;">
+                        <div class="battle-score-grid">
+                            <div class="battle-score-card person-a">
+                                <div class="person-label" id="resultNameA">Person 1</div>
+                                <div class="score-number" id="scoreA">--</div>
+                            </div>
+                            <div class="battle-winner" id="battleWinner">
+                                <div class="winner-badge">🏆</div>
+                                <div class="winner-text" id="winnerText">Winner!</div>
+                            </div>
+                            <div class="battle-score-card person-b">
+                                <div class="person-label" id="resultNameB">Person 2</div>
+                                <div class="score-number" id="scoreB">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div id="analysisText"></div>
+                </div>
+
+                <button class="restart-btn" onclick="restart()">Start Over</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built with Claude AI • Your data is not stored</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed:', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
