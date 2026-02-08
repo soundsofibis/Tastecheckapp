@@ -327,8 +327,7 @@ ANALYSIS: [analysis]"""
         return {"score": 0, "analysis": f"Error: {str(e)}"}
 
 
-if __name__ == '__main__':
-    if not API_KEY:
+
 if __name__ == '__main__':
     if not API_KEY:
         print('⚠️  WARNING: ANTHROPIC_API_KEY not set!')
