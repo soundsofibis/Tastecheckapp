@@ -19,13 +19,26 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
     <link rel="apple-touch-icon" href="/icon-192.png">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎵 TasteCheck</h1>
-            <p class="tagline">How good is your music taste?</p>
+            <div class="header-content">
+                <div>
+                    <h1>🎵 TasteCheck</h1>
+                    <p class="tagline">How good is your music taste?</p>
+                </div>
+                <button class="share-btn" onclick="shareApp()">
+                    <span>📤</span>
+                    <span>Share App</span>
+                </button>
+            </div>
         </header>
 
         <main>
@@ -38,15 +51,15 @@
                         <span class="mode-label">Analyze My Taste</span>
                         <span class="mode-description">Upload one screenshot</span>
                     </button>
-                    <button class="mode-btn" onclick="selectMode('evolution')">
-                        <span class="mode-emoji">📈</span>
-                        <span class="mode-label">Track My Evolution</span>
-                        <span class="mode-description">Compare 2-3 years</span>
-                    </button>
                     <button class="mode-btn" onclick="selectMode('battle')">
                         <span class="mode-emoji">⚔️</span>
                         <span class="mode-label">Battle a Friend</span>
                         <span class="mode-description">Head-to-head comparison</span>
+                    </button>
+                    <button class="mode-btn" onclick="selectMode('evolution')">
+                        <span class="mode-emoji">📈</span>
+                        <span class="mode-label">Track My Evolution</span>
+                        <span class="mode-description">Compare 2-3 years</span>
                     </button>
                     <button class="mode-btn" onclick="selectMode('manual')">
                         <span class="mode-emoji">✍️</span>

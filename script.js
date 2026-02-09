@@ -185,6 +185,7 @@ async function analyze() {
     
     // Show loading
     document.getElementById('loading').style.display = 'block';
+    showLoadingProgress(currentMode);
     document.getElementById('results').style.display = 'none';
     
     const loadingTexts = {
@@ -244,6 +245,7 @@ async function analyze() {
     } catch (error) {
         console.error('Error:', error);
         alert('Something went wrong. Please try again.');
+        hideLoadingProgress();
         document.getElementById('loading').style.display = 'none';
     }
 }
@@ -260,7 +262,8 @@ function fileToBase64(file) {
 
 // Display results
 function displayResults(data) {
-    document.getElementById('loading').style.display = 'none';
+    hideLoadingProgress();
+        document.getElementById('loading').style.display = 'none';
     document.getElementById('results').style.display = 'block';
     
     // Hide all result types
@@ -329,3 +332,76 @@ function restart() {
 }
 
 console.log('TasteCheck script loaded successfully');
+
+
+// Share app functionality
+function shareApp() {
+    const url = 'https://tastecheckapp.onrender.com';
+    const text = 'Check out TasteCheck - analyze your music taste with AI! 🎵';
+    
+    // Try native share if available (mobile)
+    if (navigator.share) {
+        navigator.share({
+            title: 'TasteCheck',
+            text: text,
+            url: url
+        }).catch(err => {
+            // If share fails, fall back to copy
+            copyToClipboard(url);
+        });
+    } else {
+        // Desktop: copy to clipboard
+        copyToClipboard(url);
+    }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show success message
+        const btn = document.querySelector('.share-btn');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span>✅</span><span>Link Copied!</span>';
+        btn.style.background = 'rgba(72, 187, 120, 0.3)';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.background = '';
+        }, 2000);
+    }).catch(err => {
+        alert('Link: https://tastecheckapp.onrender.com');
+    });
+}
+
+
+// Loading progress indicator
+function showLoadingProgress(mode) {
+    const loadingDiv = document.getElementById('loading');
+    const messages = [
+        "🎵 Analyzing your musical choices...",
+        "🎸 Judging your taste...",
+        "🎧 Claude is thinking deeply...",
+        "📊 Almost done..."
+    ];
+    
+    let messageIndex = 0;
+    const messageElement = loadingDiv.querySelector('p');
+    
+    // Update message every 8 seconds
+    const interval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % messages.length;
+        if (messageElement) {
+            messageElement.textContent = messages[messageIndex];
+        }
+    }, 8000);
+    
+    // Store interval ID to clear it later
+    loadingDiv.dataset.intervalId = interval;
+}
+
+function hideLoadingProgress() {
+    const loadingDiv = document.getElementById('loading');
+    const intervalId = loadingDiv.dataset.intervalId;
+    if (intervalId) {
+        clearInterval(parseInt(intervalId));
+    }
+}
