@@ -1,0 +1,10 @@
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: 
+        url('music-genres-tube-map.svg') center center / 150% auto no-repeat fixed,
+        linear-gradient(135deg, #f8f4ec 0%, #e8e4dc 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+    position: relative;
+}

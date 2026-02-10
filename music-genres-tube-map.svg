@@ -120,22 +120,17 @@
   <!-- ==================== INFLUENCE CONNECTIONS (dashed) ==================== -->
   <!-- Punk → Thrash -->
   <line x1="360" y1="225" x2="460" y2="155" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="410" y="178" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" text-anchor="middle" transform="rotate(-28 410 178)">Punk → Thrash</text>
   <!-- Grunge → Death Metal -->
   <line x1="560" y1="225" x2="670" y2="155" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="615" y="178" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" text-anchor="middle" transform="rotate(-28 615 178)">Grunge → Metal</text>
   <!-- Fusion → Grunge -->
   <line x1="560" y1="300" x2="560" y2="225" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
   <text x="575" y="255" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555">Fusion</text>
   <!-- Funk → Disco -->
   <line x1="360" y1="435" x2="290" y2="505" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="310" y="465" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" transform="rotate(-35 310 465)">Funk → Disco</text>
   <!-- Synth-Pop → House -->
   <line x1="405" y1="365" x2="460" y2="505" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="430" y="430" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" transform="rotate(35 430 430)">Synth-Pop → House</text>
   <!-- Outlaw → Punk -->
   <line x1="400" y1="85" x2="360" y2="225" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="380" y="150" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" transform="rotate(-32 380 150)">Outlaw → Punk</text>
   <!-- Motown → Classic Rock -->
   <line x1="145" y1="435" x2="145" y2="225" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
   <text x="160" y="330" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555">Soul → Rock</text>
@@ -144,7 +139,6 @@
   <text x="775" y="505" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555">R&amp;B → Trap</text>
   <!-- Teen Pop → Contemp. R&amp;B -->
   <line x1="660" y1="365" x2="760" y2="435" stroke="#777" stroke-width="3" stroke-dasharray="5,5"/>
-  <text x="710" y="395" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#555" transform="rotate(32 710 395)">Pop → R&amp;B</text>
 
   <!-- ==================== LEGEND ==================== -->
   <g font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#444">
