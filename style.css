@@ -348,6 +348,14 @@ button:disabled {
     margin-top: 40px;
 }
 
+.score-display h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 20px;
+}
+
 .score-display {
     text-align: center;
     margin-bottom: 30px;
@@ -373,9 +381,10 @@ button:disabled {
 }
 
 .score-label {
-    font-size: 1.2em;
-    color: #4a5568;
-    font-weight: 600;
+    font-size: 1.3em;
+    color: #1a202c;
+    font-weight: 700;
+    margin-top: 10px;
 }
 
 .analysis-text {
