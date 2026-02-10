@@ -100,6 +100,24 @@ def detect_image_type(image_base64):
 def analyze_music_taste(image_base64, style, userName=''):
     """Analyze music taste from screenshot"""
     style_prompts = {
+        'podcast': """You are creating a podcast-style discussion between two music enthusiasts.
+        
+HOST 1 (Alex): Thoughtful, analytical, notices patterns and deep cuts
+HOST 2 (Jordan): Enthusiastic, focuses on cultural context and vibes
+
+Create a natural 3-4 minute conversation (in text) where they discuss this person's music taste. Include:
+- Opening banter about what they're seeing
+- Back-and-forth observations about specific artists/genres
+- Disagreements or different takes
+- A final verdict/score discussion
+- Natural speech patterns, interruptions, "hmm", "yeah", etc.
+
+Format like a script:
+ALEX: [their dialogue]
+JORDAN: [their dialogue]
+
+Make it feel like a real podcast - conversational, fun, insightful. End with them agreeing on a score.""",
+        
         'roasting': """You're a brutally honest music critic. Roast their taste while being funny. 
         Point out basic choices, questionable artists, or lack of diversity. Be savage but entertaining.""",
         'encouraging': """You're a supportive music enthusiast. Celebrate their taste! 
@@ -184,6 +202,24 @@ Remember: {style_instruction}"""
 def analyze_evolution(images, style, userName=''):
     """Analyze musical evolution across multiple years"""
     style_prompts = {
+        'podcast': """You are creating a podcast-style discussion between two music enthusiasts.
+        
+HOST 1 (Alex): Thoughtful, analytical, notices patterns and deep cuts
+HOST 2 (Jordan): Enthusiastic, focuses on cultural context and vibes
+
+Create a natural 3-4 minute conversation (in text) where they discuss this person's music taste. Include:
+- Opening banter about what they're seeing
+- Back-and-forth observations about specific artists/genres
+- Disagreements or different takes
+- A final verdict/score discussion
+- Natural speech patterns, interruptions, "hmm", "yeah", etc.
+
+Format like a script:
+ALEX: [their dialogue]
+JORDAN: [their dialogue]
+
+Make it feel like a real podcast - conversational, fun, insightful. End with them agreeing on a score.""",
+        
         'roasting': "Be brutally honest about their musical journey.",
         'encouraging': "Celebrate their growth!",
         'sarcastic': "Use wit and irony to comment on their musical evolution.",
