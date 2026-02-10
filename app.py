@@ -12,7 +12,7 @@ import base64
 API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='.', static_url_path='')
 
 # Initialize Anthropic client
 client = anthropic.Anthropic(api_key=API_KEY)
