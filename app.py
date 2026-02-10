@@ -121,6 +121,8 @@ def analyze_music_taste(image_base64, style, userName=''):
    - Mix of classic/timeless artists with quality current music
    - Overall cultural awareness and taste
    
+IMPORTANT: Use the FULL 0-100 range. Excellent taste should score 85-95. Good taste 75-84. Average 60-74. Poor taste below 60. Don't cluster everything around 75-78.
+   
 2. A fun, detailed analysis in this style: {style_instruction}
 
 The analysis should be 3-4 paragraphs covering:
