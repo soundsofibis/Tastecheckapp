@@ -230,10 +230,12 @@ input[type="file"] {
 
 .preview-item img {
     width: 100%;
-    max-width: 300px;
-    height: 200px;
+    max-width: 200px;
+    max-height: 300px;
     object-fit: contain;
     background: #f7fafc;
+    margin: 0 auto;
+    display: block;
 }
 
 .remove-preview {
@@ -376,10 +378,11 @@ button:disabled {
 }
 
 .score-number {
-    font-size: 4em;
-    font-weight: 800;
+    font-size: 4.5em;
+    font-weight: 900;
     font-family: 'Space Grotesk', sans-serif;
     color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .score-label {
