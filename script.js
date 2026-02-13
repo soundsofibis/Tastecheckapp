@@ -153,7 +153,7 @@ function checkManualInputReady() {
 }
 
 // Select feedback style
-function selectFeedback(style) {
+function selectStyle(style) {
     console.log('Feedback selected:', style);
     selectedStyle = style;
     
