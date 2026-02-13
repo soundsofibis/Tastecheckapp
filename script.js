@@ -405,3 +405,47 @@ function hideLoadingProgress() {
         clearInterval(parseInt(intervalId));
     }
 }
+
+
+// Generate and play podcast audio
+async function generatePodcastAudio(dialogue) {
+    const audioBtn = document.getElementById('audioBtn');
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    audioBtn.textContent = '🎙️ Generating audio...';
+    audioBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/generate_audio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dialogue: dialogue })
+        });
+        
+        const data = await response.json();
+        
+        if (data.audio) {
+            // Convert base64 to audio
+            const audioBlob = base64ToBlob(data.audio, 'audio/mpeg');
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            audioPlayer.src = audioUrl;
+            audioPlayer.style.display = 'block';
+            audioBtn.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Audio generation error:', error);
+        audioBtn.textContent = '❌ Audio failed';
+        audioBtn.disabled = false;
+    }
+}
+
+function base64ToBlob(base64, type) {
+    const binary = atob(base64);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+    }
+    return new Blob([array], { type: type });
+}
+

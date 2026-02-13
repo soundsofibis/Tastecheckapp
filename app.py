@@ -5,6 +5,7 @@ Handles image analysis using Claude's vision API
 
 from flask import Flask, request, jsonify, send_from_directory
 import anthropic
+from openai import OpenAI
 import os
 import base64
 
@@ -16,7 +17,43 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 
 # Initialize Anthropic client
 client = anthropic.Anthropic(api_key=API_KEY)
+openai_client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY', ''))
 
+
+
+def generate_podcast_audio(dialogue_text):
+    """Generate audio from podcast dialogue using OpenAI TTS"""
+    try:
+        # Split dialogue into Alex and Jordan parts
+        lines = dialogue_text.strip().split('\n')
+        audio_segments = []
+        
+        for line in lines:
+            if line.startswith('ALEX:'):
+                text = line.replace('ALEX:', '').strip()
+                if text:
+                    response = openai_client.audio.speech.create(
+                        model="tts-1",
+                        voice="onyx",  # Male voice for Alex
+                        input=text
+                    )
+                    audio_segments.append(response.content)
+            elif line.startswith('JORDAN:'):
+                text = line.replace('JORDAN:', '').strip()
+                if text:
+                    response = openai_client.audio.speech.create(
+                        model="tts-1",
+                        voice="nova",  # Female voice for Jordan
+                        input=text
+                    )
+                    audio_segments.append(response.content)
+        
+        # Combine audio segments
+        combined_audio = b''.join(audio_segments)
+        return combined_audio
+    except Exception as e:
+        print(f"Audio generation error: {e}")
+        return None
 
 @app.route('/')
 def index():
@@ -364,6 +401,33 @@ ANALYSIS: [analysis]"""
     except Exception as e:
         return {"score": 0, "analysis": f"Error: {str(e)}"}
 
+
+
+
+@app.route('/generate_audio', methods=['POST'])
+def generate_audio():
+    """Generate and return podcast audio"""
+    try:
+        data = request.json
+        dialogue = data.get('dialogue', '')
+        
+        if not dialogue:
+            return jsonify({'error': 'No dialogue provided'}), 400
+        
+        # Generate audio
+        audio_data = generate_podcast_audio(dialogue)
+        
+        if not audio_data:
+            return jsonify({'error': 'Audio generation failed'}), 500
+        
+        # Return audio as base64 for easy frontend handling
+        import base64
+        audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+        
+        return jsonify({'audio': audio_base64})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
