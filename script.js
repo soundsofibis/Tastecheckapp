@@ -305,6 +305,35 @@ function displayResults(data) {
     }
     
     document.getElementById('analysisText').textContent = data.analysis;
+    
+    // Add audio controls for podcast style
+    const analysisContainer = document.getElementById('analysisText').parentElement;
+    const existingAudio = document.getElementById('podcastAudioControls');
+    if (existingAudio) existingAudio.remove();
+    
+    if (selectedStyle === 'podcast' && data.analysis) {
+        const audioDiv = document.createElement('div');
+        audioDiv.id = 'podcastAudioControls';
+        audioDiv.style.marginTop = '30px';
+        audioDiv.style.textAlign = 'center';
+        
+        const audioBtn = document.createElement('button');
+        audioBtn.id = 'audioBtn';
+        audioBtn.textContent = '🎙️ Generate Audio Podcast';
+        audioBtn.onclick = () => generatePodcastAudio(data.analysis);
+        
+        const audioPlayer = document.createElement('audio');
+        audioPlayer.id = 'audioPlayer';
+        audioPlayer.controls = true;
+        audioPlayer.style.display = 'none';
+        audioPlayer.style.width = '100%';
+        audioPlayer.style.marginTop = '20px';
+        
+        audioDiv.appendChild(audioBtn);
+        audioDiv.appendChild(audioPlayer);
+        analysisContainer.appendChild(audioDiv);
+    }
+    
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
