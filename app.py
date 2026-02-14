@@ -3,7 +3,7 @@ TasteCheck Backend Server - Flask Version
 Handles image analysis using Claude's vision API
 """
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, send_file
 import anthropic
 from openai import OpenAI
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
