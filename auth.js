@@ -70,3 +70,9 @@ async function register() {
         errorEl.textContent = 'Something went wrong';
     }
 }
+
+function continueAsGuest() {
+    // Set guest flag in sessionStorage
+    sessionStorage.setItem('guest_mode', 'true');
+    window.location.href = '/';
+}
