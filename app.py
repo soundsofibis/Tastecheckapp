@@ -9,6 +9,7 @@ from openai import OpenAI
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from models import db, User
+from rate_limit import check_guest_limit, increment_guest_usage
 
 import os
 import base64
