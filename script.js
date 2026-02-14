@@ -153,7 +153,7 @@ function checkManualInputReady() {
 }
 
 // Select feedback style
-function selectStyle(style) {
+function selectStyle(style, element) {
     console.log('Feedback selected:', style);
     selectedStyle = style;
     
@@ -161,7 +161,9 @@ function selectStyle(style) {
     document.querySelectorAll('.feedback-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    event.target.closest('.feedback-btn').classList.add('selected');
+    if (element) {
+        element.classList.add('selected');
+    }
     
     // Start analysis
     setTimeout(() => analyze(), 300);
