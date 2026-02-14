@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TasteCheck - Login/Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 TasteCheck</h1>
+            <p class="tagline">How good is your music taste?</p>
+        </header>
+        
+        <main>
+            <div id="authContainer">
+                <div class="auth-toggle">
+                    <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+                    <button id="registerTab" onclick="showRegister()">Register</button>
+                </div>
+                
+                <div id="loginForm" class="auth-form">
+                    <h2>Welcome Back</h2>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button onclick="login()">Login</button>
+                    <p id="loginError" class="error"></p>
+                </div>
+                
+                <div id="registerForm" class="auth-form" style="display: none;">
+                    <h2>Create Account</h2>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Password (min 8 characters)" required>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <button onclick="register()">Create Account</button>
+                    <p id="registerError" class="error"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="auth.js"></script>
+</body>
+</html>

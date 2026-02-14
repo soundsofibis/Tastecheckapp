@@ -6,6 +6,10 @@ Handles image analysis using Claude's vision API
 from flask import Flask, request, jsonify, send_from_directory
 import anthropic
 from openai import OpenAI
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_bcrypt import Bcrypt
+from models import db, User
+
 import os
 import base64
 
@@ -14,6 +18,26 @@ API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='.', static_url_path='')
+
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tastecheck.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+
+# Initialize extensions
+db.init_app(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# Create tables
+with app.app_context():
+    db.create_all()
+
 
 # Initialize Anthropic client
 client = anthropic.Anthropic(api_key=API_KEY)
@@ -66,6 +90,11 @@ def serve_static(path):
     """Serve static files"""
     return send_from_directory('.', path)
 
+
+
+@app.route('/auth')
+def auth_page():
+    return send_file('auth.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -435,3 +464,51 @@ if __name__ == '__main__':
         print('⚠️  WARNING: ANTHROPIC_API_KEY not set!')
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+    
+    if User.query.filter_by(email=email).first():
+        return jsonify({'error': 'Email already registered'}), 400
+    
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(email=email, password_hash=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+    
+    login_user(user)
+    return jsonify({'success': True, 'message': 'Registration successful'})
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        login_user(user)
+        return jsonify({'success': True, 'is_premium': user.is_premium})
+    
+    return jsonify({'error': 'Invalid credentials'}), 401
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'success': True})
+
+@app.route('/user/status')
+def user_status():
+    if current_user.is_authenticated:
+        return jsonify({
+            'authenticated': True,
+            'email': current_user.email,
+            'is_premium': current_user.is_premium,
+            'is_admin': current_user.is_admin,
+            'analyses_remaining': current_user.get_daily_limit() - current_user.analyses_today
+        })
+    return jsonify({'authenticated': False})

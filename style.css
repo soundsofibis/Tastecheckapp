@@ -498,3 +498,88 @@ button:disabled {
         padding: 25px;
     }
 }
+
+/* Auth Styles */
+#authContainer {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.auth-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.auth-toggle button {
+    flex: 1;
+    background: white;
+    color: #667eea;
+    border: 2px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.auth-toggle button.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.auth-form {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1em;
+}
+
+.auth-form button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.error {
+    color: #e53e3e;
+    font-size: 0.9em;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+}
+
+.user-info .badge {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #1a202c;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85em;
+}
+
+.user-info button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+}

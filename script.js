@@ -1,3 +1,39 @@
+// Check user authentication status on load
+let userStatus = { authenticated: false, is_premium: false };
+
+async function checkUserStatus() {
+    try {
+        const response = await fetch('/user/status');
+        userStatus = await response.json();
+        updateUIForUser();
+    } catch (error) {
+        console.error('Failed to check user status');
+    }
+}
+
+function updateUIForUser() {
+    // Add user info to header if authenticated
+    if (userStatus.authenticated) {
+        const header = document.querySelector('header');
+        const userInfo = document.createElement('div');
+        userInfo.className = 'user-info';
+        userInfo.innerHTML = `
+            <span>${userStatus.email}</span>
+            ${userStatus.is_premium ? '<span class="badge">Premium</span>' : ''}
+            <button onclick="logout()">Logout</button>
+        `;
+        header.appendChild(userInfo);
+    }
+}
+
+async function logout() {
+    await fetch('/logout', { method: 'POST' });
+    window.location.reload();
+}
+
+// Check status on page load
+checkUserStatus();
+
 // Global state
 let currentMode = null;
 let uploadedFiles = [];
