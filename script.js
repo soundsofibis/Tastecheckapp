@@ -348,6 +348,26 @@ function displayResults(data) {
     // TODO: Re-enable for premium users after auth is implemented
     
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    addShareButton();
+}
+
+
+
+// Add share button to results
+function addShareButton() {
+    const resultsDiv = document.getElementById('results');
+    
+    // Remove existing share button if any
+    const existingBtn = document.getElementById('shareResultBtn');
+    if (existingBtn) existingBtn.remove();
+    
+    const shareBtn = document.createElement('button');
+    shareBtn.id = 'shareResultBtn';
+    shareBtn.innerHTML = '📸 Share My Results';
+    shareBtn.style.marginTop = '20px';
+    shareBtn.onclick = generateShareImage;
+    
+    resultsDiv.appendChild(shareBtn);
 }
 
 // Animate score
@@ -491,3 +511,88 @@ function base64ToBlob(base64, type) {
     return new Blob([array], { type: type });
 }
 
+
+// Generate shareable image
+async function generateShareImage() {
+    const btn = document.getElementById('shareResultBtn');
+    btn.textContent = '⏳ Generating...';
+    btn.disabled = true;
+    
+    // Create shareable card
+    const shareCard = document.createElement('div');
+    shareCard.id = 'shareCard';
+    shareCard.style.cssText = `
+        position: fixed;
+        top: -9999px;
+        left: 0;
+        width: 1080px;
+        height: 1080px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px;
+        box-sizing: border-box;
+        font-family: 'Space Grotesk', sans-serif;
+        color: white;
+    `;
+    
+    // Get score
+    const scoreEl = document.getElementById('scoreNumber');
+    const score = scoreEl ? scoreEl.textContent : '0';
+    
+    // Get analysis snippet (first 200 chars)
+    const analysisEl = document.getElementById('analysisText');
+    const fullAnalysis = analysisEl ? analysisEl.textContent : '';
+    const snippet = fullAnalysis.substring(0, 200) + '...';
+    
+    shareCard.innerHTML = `
+        <div style="text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h1 style="font-size: 80px; margin: 0; letter-spacing: -2px;">TasteCheck</h1>
+                <p style="font-size: 32px; opacity: 0.9; margin: 20px 0;">My Music Taste Score</p>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 40px; padding: 80px;">
+                <div style="font-size: 200px; font-weight: 900; line-height: 1; margin-bottom: 20px;">${score}</div>
+                <div style="font-size: 36px; opacity: 0.95; line-height: 1.4; font-family: 'Inter', sans-serif;">${snippet}</div>
+            </div>
+            
+            <div style="opacity: 0.8;">
+                <p style="font-size: 28px; margin: 0;">tastecheckapp.onrender.com</p>
+                <p style="font-size: 24px; margin: 10px 0 0 0;">Analyzed by Claude AI</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(shareCard);
+    
+    // Generate image
+    try {
+        const canvas = await html2canvas(shareCard, {
+            scale: 2,
+            backgroundColor: null,
+            logging: false
+        });
+        
+        // Convert to blob and download
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tastecheck-score-${score}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            // Cleanup
+            shareCard.remove();
+            btn.textContent = '✅ Downloaded!';
+            setTimeout(() => {
+                btn.textContent = '📸 Share My Results';
+                btn.disabled = false;
+            }, 2000);
+        });
+    } catch (error) {
+        console.error('Share image error:', error);
+        shareCard.remove();
+        btn.textContent = '❌ Failed - Try Again';
+        btn.disabled = false;
+    }
+}
