@@ -27,6 +27,28 @@
     <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
+
+    <!-- Check if user is authenticated or in guest mode -->
+    <script>
+        // Check authentication status
+        const isGuest = sessionStorage.getItem('guest_mode') === 'true';
+        
+        fetch('/user/status')
+            .then(res => res.json())
+            .then(data => {
+                // If not authenticated and not guest mode, redirect to auth
+                if (!data.authenticated && !isGuest) {
+                    window.location.href = '/auth';
+                }
+            })
+            .catch(() => {
+                // On error, also redirect to auth if not guest
+                if (!isGuest) {
+                    window.location.href = '/auth';
+                }
+            });
+    </script>
+
     <div class="container">
         <header>
             <div class="header-content">
