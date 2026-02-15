@@ -538,10 +538,31 @@ async function generateShareImage() {
     const scoreEl = document.getElementById('scoreNumber');
     const score = scoreEl ? scoreEl.textContent : '0';
     
-    // Get analysis snippet (first 200 chars)
+    // Get analysis snippet (smart truncation)
     const analysisEl = document.getElementById('analysisText');
     const fullAnalysis = analysisEl ? analysisEl.textContent : '';
-    const snippet = fullAnalysis.substring(0, 200) + '...';
+    
+    // Extract first 2-3 interesting sentences
+    let snippet = fullAnalysis.substring(0, 250);
+    const lastPeriod = snippet.lastIndexOf('.');
+    const lastExclaim = snippet.lastIndexOf('!');
+    const lastSentence = Math.max(lastPeriod, lastExclaim);
+    
+    if (lastSentence > 100) {
+        snippet = fullAnalysis.substring(0, lastSentence + 1);
+    } else {
+        snippet = snippet + '...';
+    }
+    
+    // Add emoji for flair
+    const scoreNum = parseInt(score);
+    let emoji = '🎵';
+    if (scoreNum >= 85) emoji = '🔥';
+    else if (scoreNum >= 75) emoji = '✨';
+    else if (scoreNum >= 60) emoji = '🎶';
+    else if (scoreNum < 50) emoji = '💀';
+    
+    snippet = emoji + ' ' + snippet;
     
     shareCard.innerHTML = `
         <div style="text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
@@ -555,9 +576,12 @@ async function generateShareImage() {
                 <div style="font-size: 36px; opacity: 0.95; line-height: 1.4; font-family: 'Inter', sans-serif;">${snippet}</div>
             </div>
             
-            <div style="opacity: 0.8;">
-                <p style="font-size: 28px; margin: 0;">tastecheckapp.onrender.com</p>
-                <p style="font-size: 24px; margin: 10px 0 0 0;">Analyzed by Claude AI</p>
+            <div>
+                <div style="font-size: 36px; font-weight: 700; margin-bottom: 15px; opacity: 0.95;">
+                    🎯 Challenge Your Friends
+                </div>
+                <p style="font-size: 28px; margin: 0; opacity: 0.8;">tastecheckapp.onrender.com</p>
+                <p style="font-size: 22px; margin: 10px 0 0 0; opacity: 0.7;">Powered by Claude AI</p>
             </div>
         </div>
     `;
@@ -584,6 +608,10 @@ async function generateShareImage() {
             // Cleanup
             shareCard.remove();
             btn.textContent = '✅ Downloaded!';
+            
+            // Show share options
+            showShareOptions(url);
+            
             setTimeout(() => {
                 btn.textContent = '📸 Share My Results';
                 btn.disabled = false;
@@ -595,4 +623,85 @@ async function generateShareImage() {
         btn.textContent = '❌ Failed - Try Again';
         btn.disabled = false;
     }
+}
+
+
+function showShareOptions(imageUrl) {
+    // Create share modal
+    const modal = document.createElement('div');
+    modal.id = 'shareModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        z-index: 10000;
+        text-align: center;
+        max-width: 400px;
+    `;
+    
+    modal.innerHTML = `
+        <h3 style="margin: 0 0 20px 0; font-family: 'Space Grotesk', sans-serif;">Share Your Results</h3>
+        <p style="margin-bottom: 20px; color: #718096;">Image downloaded! Now share it:</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            <button onclick="shareToInstagram()" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                📸 Instagram
+            </button>
+            <button onclick="shareToTwitter()" style="background: #1DA1F2; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                🐦 Twitter
+            </button>
+        </div>
+        <button onclick="closeShareModal()" style="background: #e2e8f0; color: #4a5568; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+            Close
+        </button>
+    `;
+    
+    // Add backdrop
+    const backdrop = document.createElement('div');
+    backdrop.id = 'shareBackdrop';
+    backdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+    `;
+    backdrop.onclick = closeShareModal;
+    
+    document.body.appendChild(backdrop);
+    document.body.appendChild(modal);
+}
+
+function closeShareModal() {
+    const modal = document.getElementById('shareModal');
+    const backdrop = document.getElementById('shareBackdrop');
+    if (modal) modal.remove();
+    if (backdrop) backdrop.remove();
+}
+
+function shareToInstagram() {
+    // On mobile, try to open Instagram
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        window.open('instagram://');
+        setTimeout(() => {
+            alert('Upload the downloaded image to Instagram Stories or Feed!');
+        }, 1000);
+    } else {
+        window.open('https://www.instagram.com/', '_blank');
+        alert('Upload the downloaded image to Instagram!');
+    }
+    closeShareModal();
+}
+
+function shareToTwitter() {
+    const text = encodeURIComponent('I just analyzed my music taste! 🎵 What\'s your score?');
+    const url = encodeURIComponent('https://tastecheckapp.onrender.com');
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    closeShareModal();
 }
