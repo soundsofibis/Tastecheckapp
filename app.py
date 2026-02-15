@@ -534,3 +534,26 @@ def setup_admin():
         db.session.commit()
         
         return "✅ Admin account created! Email: ian@tastecheck.com | Password: ChangeThisPassword123! | CHANGE THIS PASSWORD IMMEDIATELY!"
+
+@app.route('/reset-admin-12345')
+def reset_admin():
+    """Delete and recreate admin account"""
+    with app.app_context():
+        # Delete existing admin if exists
+        admin = User.query.filter_by(email='ian@tastecheck.com').first()
+        if admin:
+            db.session.delete(admin)
+            db.session.commit()
+        
+        # Create new admin
+        hashed_password = bcrypt.generate_password_hash('TasteCheck2026!').decode('utf-8')
+        admin = User(
+            email='ian@tastecheck.com',
+            password_hash=hashed_password,
+            is_admin=True,
+            is_premium=True
+        )
+        db.session.add(admin)
+        db.session.commit()
+        
+        return "✅ Admin reset! Email: ian@tastecheck.com | Password: TasteCheck2026!"
