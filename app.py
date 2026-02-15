@@ -537,10 +537,14 @@ def make_ian_admin():
 
 @app.route('/promote-ibis-final')
 def promote_ibis():
+    all_users = User.query.all()
+    emails = [u.email for u in all_users]
+    
     user = User.query.filter_by(email='ibis@hotmail.co.uk').first()
     if user:
         user.is_admin = True
         user.is_premium = True
         db.session.commit()
         return "SUCCESS - ibis@hotmail.co.uk has unlimited access"
-    return "Account not found - make sure you registered first"
+    
+    return f"Account not found. Registered emails: {emails}"
