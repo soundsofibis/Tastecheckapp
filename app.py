@@ -460,6 +460,17 @@ def generate_audio():
         return jsonify({'error': str(e)}), 500
 
 
+
+@app.route('/admin-reset-7cxERTG3AKNtX_bm3frL6QgQvCxCDWlclI05gnN9Z5M')
+def admin_password_reset():
+    admin = User.query.filter_by(email='ian@tastecheck.com').first()
+    if admin:
+        admin.password_hash = bcrypt.generate_password_hash('NewSecurePass2026!').decode('utf-8')
+        db.session.commit()
+        return "Password reset! Delete this route immediately!"
+    return "Admin not found"
+
+
 if __name__ == '__main__':
     if not API_KEY:
         print('⚠️  WARNING: ANTHROPIC_API_KEY not set!')
@@ -513,3 +524,13 @@ def user_status():
             'analyses_remaining': current_user.get_daily_limit() - current_user.analyses_today
         })
     return jsonify({'authenticated': False})
+
+@app.route('/make-ian-admin-xyz789')
+def make_ian_admin():
+    user = User.query.filter_by(email='ian.black@ymail.com').first()
+    if user:
+        user.is_admin = True
+        user.is_premium = True
+        db.session.commit()
+        return "✅ ian.black@ymail.com is now admin with unlimited access!"
+    return "User not found"
