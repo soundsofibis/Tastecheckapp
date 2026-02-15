@@ -651,8 +651,8 @@ function showShareOptions(imageUrl) {
             <button onclick="shareToInstagram()" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
                 📸 Instagram
             </button>
-            <button onclick="shareToTwitter()" style="background: #1DA1F2; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
-                🐦 Twitter
+            <button onclick="shareToX()" style="background: #1DA1F2; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                𝕏 Post
             </button>
         </div>
         <button onclick="closeShareModal()" style="background: #e2e8f0; color: #4a5568; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600;">
@@ -699,7 +699,7 @@ function shareToInstagram() {
     closeShareModal();
 }
 
-function shareToTwitter() {
+function shareToX() {
     const text = encodeURIComponent('I just analyzed my music taste! 🎵 What\'s your score?');
     const url = encodeURIComponent('https://tastecheckapp.onrender.com');
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
